@@ -16,12 +16,18 @@ def spider_lesson_videos(lesson):
     json_videos = json.loads(req.text)
     index = 0
     for json_video in json_videos["data"]["video_list"]:
+        page = None
+        if index < 10:
+            page = "0" + str(index)
+        else:
+            page = str(index)
+
         video = Video()
         video.set_link(json_video["video_url"])
-        video.set_name(
-            str(index) + "_" + Utils.filter_file_name(json_video["video_name"]) + Utils.get_file_type(video.get_link()))
-        video.set_path(lesson.get_path() + os.sep + video.get_name())
 
+        video.set_name(Utils.filter_file_name(json_video["video_name"]) + Utils.get_file_type(video.get_link()))
+        video.set_name(
+            page + "_" + Utils.filter_file_name(json_video["video_name"]) + Utils.get_file_type(video.get_link()))
         if not (Utils.file_exist(video.get_path())):
             fd = os.open(video.get_path(), os.O_CREAT)
             video.set_download_status(False)
@@ -32,6 +38,7 @@ def spider_lesson_videos(lesson):
                 video.set_download_status(True)
             else:
                 video.set_download_status(False)
+
         lesson_videos.append(video)
         index += 1
 
@@ -60,35 +67,3 @@ def spider_videos_link(url):
             page += 1
 
     return videos
-
-
-# 抓取整个专题的所有视频里列表
-def rename_videos(url):
-    req = requests.get(url)
-    json_stages = json.loads(req.text)
-
-    for json_stage in json_stages["data"]["stage"]:
-        stage_path = Utils.filter_file_name(Constant.save_path + os.sep + json_stage["stage_name"])
-        index = 0
-        for json_lesson in json_stage["list"]:
-            lesson = Lesson()
-            lesson.set_link(Constant.itemLinkPartLink + json_lesson["course_id"])
-            lesson.set_path(Utils.filter_file_name(stage_path + os.sep + json_lesson["name"]))
-
-            src = lesson.get_path()
-            dist = Utils.filter_file_name(stage_path + os.sep + str(index) + "_" + json_lesson["name"])
-            os.rename(src, dist)
-            index += 1
-
-            # if not (Utils.file_exist(lesson.get_path())):
-            #     os.makedirs(lesson.get_path())
-            #     # print "dir :" + lesson.get_path()
-            # lesson_videos = spider_lesson_videos(lesson)
-            # index = 0
-            # for item in lesson_videos:
-            #     src = item.get_path()
-            #     dist = lesson.get_path() + os.sep + str(index) + "_" + item.get_name()
-            #     print "src--" + src
-            #     print "dis--" + dist
-            #     os.rename(src, dist)
-            #     index += 1
