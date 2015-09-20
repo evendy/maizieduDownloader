@@ -1,0 +1,2 @@
+# maizieduDownloader
+一个可以下载麦子学院全部python教学视频的python下载器项目
