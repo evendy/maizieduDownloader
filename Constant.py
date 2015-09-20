@@ -15,7 +15,7 @@ user_id = "49489"
 fie_min_size = 1024
 
 # 文件保存目录
-save_path = os.path.pardir + os.sep + "video"
+save_path = os.path.pardir + os.sep + os.path.pardir + os.sep + "video"
 
 # python专题链接
 link = "http://api.maiziedu.com/v2/getCareerDetail?UUID=%s&careerId=13&client=%s&userId=%s" % (uuid,

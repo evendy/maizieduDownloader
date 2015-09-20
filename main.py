@@ -56,4 +56,4 @@ if __name__ == '__main__':
     # spider_videos()
     # async_videos_status()
     # download_un_download_videos()
-    stest()
+    test()
